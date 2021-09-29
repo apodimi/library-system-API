@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Web Developent Project</title>
+</head>
+<body>
+    <div >
+        <h1>Search Book</h1>
+        <input type="text" id="keyword"  placeholder="Type a keyword">
+        <input type="button" id="search" value="Search">
+    </div>
+    <div >
+        <h1>Add Book</h1>
+        <input type="text" id="author" placeholder="Author">
+        <input type="text" id="title"  placeholder="Title">
+        <select name="genre" id="genre">
+            <option value="Science fiction">Science fiction</option>
+            <option value="Satire">Satire</option>
+            <option value="Drama">Drama</option>
+            <option value="Action and Adventure">Action and Adventure</option>
+            <option value="Romance">Romance</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Horror">Horror</option>
+        </select>
+        <input type="text" id="price"  placeholder="Price (Only numbers)">
+        <input type="button" id="addBook" value="Add book">
+    </div>
+    <div>
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Author</th>
+                    <th>Title</th>
+                    <th>Genre</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody id="results">
+            </tbody> 
+        </table>
+    </div>
+</body>
+<script type="text/javascript">
+    window.addEventListener('load', (event)=>{
+
+        document.getElementById('search').addEventListener('click', (event)=>{
+            const keyword = document.getElementById('keyword').value;
+            let div = document.getElementById('results');
+            div.innerHTML = "";
+            const search = new XMLHttpRequest();
+            search.open('GET', `http://localhost:3000/book/${keyword}/`,true);
+            search.send();
+
+            search.onreadystatechange = function(){
+                if(search.readyState == 4 && search.status == 200){
+                    const results = JSON.parse(search.responseText);
+                    
+                    if(results.length == 0){
+                        alert('There is no results of your search');
+                    }else{
+                        
+                        results.forEach((item)=>{
+                            div.innerHTML += `<tr>
+                                <td>${item.id}</td>
+                                <td>${item.author}</td> 
+                                <td>${item.title}</td>
+                                <td>${item.genre}</td>
+                                <td>${item.price} $</td>
+                                </tr>`;
+                        });
+                    }
+                };
+            };
+        });
+
+
+        document.getElementById('addBook').addEventListener('click', (event)=>{
+            const newBook = {
+                'author':document.getElementById('author').value,
+                'title':document.getElementById('title').value,
+                'genre':document.getElementById('genre').value,
+                'price':document.getElementById('price').value,
+            };
+
+            const xhr =  new XMLHttpRequest();
+            xhr.open('POST','http://localhost:3000/book/',true);
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify(newBook));
+
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState == 4 && xhr.status == 200){
+                    alert(xhr.responseText);
+                }
+            };
+        });
+    });
+</script>
+</html>

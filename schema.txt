@@ -1,0 +1,6 @@
+CREATE TABLE `books` (
+`id` INTeger NOT NULL  PRIMARY KEY AUTOINCREMENT ,
+`author` VARCHAR( 25 ) NOT NULL ,
+`title` VARCHAR( 40 ) NOT NULL ,
+`genre` VARCHAR( 20 ) NOT NULL ,
+`price` FLOAT NOT NULL);
