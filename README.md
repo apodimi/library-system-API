@@ -32,4 +32,4 @@ nodejs app.js
 node app.js
 ```
 
-Please enjoy!
+Enjoy!
